@@ -30,4 +30,8 @@ public class IdTable {
   public void setSymbols(HashMap<String, AbstractIdentifier> symbols) {
     this.symbols = symbols;
   }
+
+  public AbstractIdentifier remove(String name) {
+    return symbols.remove(name);
+  }
 }

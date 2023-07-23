@@ -3,10 +3,8 @@ grammar isilang;
 /**
 TODO:
 >Análise Semântica:
-  >verificar se resultado da expressão é compativel com o tipo
-  >incluir tipo string
-  >Verificar se a variável foi declarada e não foi usada
-  >Verificar se uma variável está sendo usada sem ter valor inicial
+  >verificar se resultado da expressão é compativel com o tipo do identificador
+  >incluir tipo string?
 >Geração de Código:
   >A própria geração em si
   >Atribuições realizadas corretamente
@@ -29,21 +27,32 @@ TODO:
 
   import java.util.ArrayList;
   import java.util.List;
+  import java.util.HashMap;
 }
 
 @members {
+  //Geração codigo
   private Program program = new Program();
   private List<AbstractCommand> mainThread = new ArrayList<AbstractCommand>();
+
+  //Analise semantica
   private IdTable st = new IdTable();
+  private HashMap<String,Token> declaredOnly = new HashMap<String,Token>();
   public static DataType currentType;
   public static DataType currentExprType;
   private AbstractIdentifier currentId;
   private String idName;
   private boolean isExprEvaluating = false;
 
-  public void isIdDeclared(String idName) {
+  public void isIdDeclared(String idName, int line) {
     if (!st.exists(idName)) {
-      throw new semanticException("Identifier " + idName + " not declared");
+      throw new semanticException("At line " + line + ", identifier [" + idName + "] not declared");
+    }
+  }
+
+  public void idHaveValue(String idName, int line) {
+    if (st.get(idName).getValue() == null) {
+      throw new semanticException("At line " + line + ", identifier [" + idName + "] value was used but never assigned");
     }
   }
 
@@ -66,7 +75,12 @@ TODO:
   }
 }
 
-program : 'programa' block 'fimprog' FP;
+program : 'programa' block 'fimprog' FP {
+    if (declaredOnly.size() > 0) {
+      throw new semanticException("There are identifiers declared but not used starting at line " + declaredOnly.entrySet().iterator().next().getValue().getLine());
+    }
+  }
+;
 
 block : (cmd)* | codeblock;
 
@@ -81,12 +95,15 @@ cmdDeclare2: ID {
     if (!st.exists(idName)) {
       if (currentType == DataType.INTEGER) {
         st.add(idName, new IntegerId(idName));
+        declaredOnly.put(idName,_input.LT(-1));
       }
       else if (currentType == DataType.BOOLEAN) {
         st.add(idName, new BooleanId(idName));
+        declaredOnly.put(idName,_input.LT(-1));
       }
       else if (currentType == DataType.REAL) {
         st.add(idName, new RealId(idName));
+        declaredOnly.put(idName,_input.LT(-1));
       }
       else {
         throw new semanticException("At line " + _ctx.getStart().getLine() + ", unexpected Type Declared");
@@ -94,17 +111,23 @@ cmdDeclare2: ID {
     } else {
       throw new semanticException("At line " + _ctx.getStart().getLine() + ", identifier " + idName + " already declared");
     }
+    currentId = st.get(idName);
   }
 	(cmdAttr2)?
 ;
 
 cmdRead : 'leia' OP ID {
-    isIdDeclared(_input.LT(-1).getText());
+    idName = _input.LT(-1).getText();
+    isIdDeclared(idName, _input.LT(-1).getLine());
+    idHaveValue(idName, _input.LT(-1).getLine());
+    declaredOnly.remove(idName);
   }
   CP
 ;
 
-cmdWrite : 'escreva' OP (TEXT | expr {}
+cmdWrite : 'escreva' OP (TEXT | expr {
+    endExprEval(currentExprType, _ctx.getStart().getLine());
+  }
   ) CP
 ;
 
@@ -113,7 +136,7 @@ cmdIf : 'se' OP boolExpr CP 'entao' codeblock ('ou se' OP boolExpr CP 'entao' co
 
 cmdAttr : ID {
     idName = _input.LT(-1).getText();
-    isIdDeclared(idName);
+    isIdDeclared(idName, _input.LT(-1).getLine());
     currentId = st.get(idName);
   }
   cmdAttr2
@@ -121,6 +144,14 @@ cmdAttr : ID {
 
 cmdAttr2 : ATTR expr {
     endExprEval(currentId.getType(), _ctx.getStart().getLine());
+    declaredOnly.remove(currentId.getName());
+    if (currentId.getType() == DataType.INTEGER) {
+      currentId.setValue(1);
+    } else if (currentId.getType() == DataType.BOOLEAN) {
+      currentId.setValue(true);
+    } else {
+      currentId.setValue(1.0d);
+    }
   }
 ;
 
@@ -142,7 +173,9 @@ factor : NUMBER {
   }
   | ID {
     idName = _input.LT(-1).getText();
-    isIdDeclared(idName);
+    isIdDeclared(idName, _input.LT(-1).getLine());
+    idHaveValue(idName, _input.LT(-1).getLine());
+    declaredOnly.remove(idName);
     exprTypeCheck(st.get(idName).getType(), _ctx.getStart().getLine());
   }
   | OP expr CP
@@ -150,10 +183,12 @@ factor : NUMBER {
 
 boolExpr : ID {
     idName = _input.LT(-1).getText();
-    isIdDeclared(idName);
+    isIdDeclared(idName, _input.LT(-1).getLine());
+    idHaveValue(idName, _input.LT(-1).getLine());
     if (st.get(idName).getType() != DataType.BOOLEAN) {
       throw new semanticException("Identifier should have BOOLEAN type");
     }
+    declaredOnly.remove(idName);
   }
   | expr RELOP expr {
     endExprEval(currentExprType, _ctx.getStart().getLine());

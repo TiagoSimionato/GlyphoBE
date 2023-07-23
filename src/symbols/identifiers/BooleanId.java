@@ -3,7 +3,7 @@ package src.symbols.identifiers;
 import src.symbols.DataType;
 
 public class BooleanId extends AbstractIdentifier{
-    private Boolean value;
+  private Boolean value = null;
   
   public BooleanId(String name) {
     super(name, DataType.BOOLEAN);
@@ -18,8 +18,8 @@ public class BooleanId extends AbstractIdentifier{
     return value;
   }
 
-  public void setValue(Boolean value) {
-    this.value = value;
+  public void setValue(Object value) {
+    this.value = (Boolean) value;
   }
 
   @Override

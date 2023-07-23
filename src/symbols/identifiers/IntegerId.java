@@ -3,8 +3,7 @@ package src.symbols.identifiers;
 import src.symbols.DataType;
 
 public class IntegerId extends AbstractIdentifier {
-
-  private Integer value;
+  private Integer value = null;
   
   public IntegerId(String name) {
     super(name, DataType.INTEGER);
@@ -19,8 +18,8 @@ public class IntegerId extends AbstractIdentifier {
     return value;
   }
 
-  public void setValue(Integer value) {
-    this.value = value;
+  public void setValue(Object value) {
+    this.value = (Integer) value;
   }
 
   @Override

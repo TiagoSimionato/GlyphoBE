@@ -19,4 +19,8 @@ public abstract class AbstractIdentifier {
   public DataType getType() {
     return type;
   }
+
+  public abstract Object getValue();
+
+  public abstract void setValue(Object v);
 }

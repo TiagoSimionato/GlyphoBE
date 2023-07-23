@@ -16,6 +16,7 @@ package src.core;
 
   import java.util.ArrayList;
   import java.util.List;
+  import java.util.HashMap;
 
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
@@ -97,18 +98,28 @@ public class isilangLexer extends Lexer {
 	}
 
 
+	  //Geração codigo
 	  private Program program = new Program();
 	  private List<AbstractCommand> mainThread = new ArrayList<AbstractCommand>();
+
+	  //Analise semantica
 	  private IdTable st = new IdTable();
+	  private HashMap<String,Token> declaredOnly = new HashMap<String,Token>();
 	  public static DataType currentType;
 	  public static DataType currentExprType;
 	  private AbstractIdentifier currentId;
 	  private String idName;
 	  private boolean isExprEvaluating = false;
 
-	  public void isIdDeclared(String idName) {
+	  public void isIdDeclared(String idName, int line) {
 	    if (!st.exists(idName)) {
-	      throw new semanticException("Identifier " + idName + " not declared");
+	      throw new semanticException("At line " + line + ", identifier [" + idName + "] not declared");
+	    }
+	  }
+
+	  public void idHaveValue(String idName, int line) {
+	    if (st.get(idName).getValue() == null) {
+	      throw new semanticException("At line " + line + ", identifier [" + idName + "] value was used but never assigned");
 	    }
 	  }
 

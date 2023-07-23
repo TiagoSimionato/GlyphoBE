@@ -3,7 +3,7 @@ package src.symbols.identifiers;
 import src.symbols.DataType;
 
 public class RealId extends AbstractIdentifier {
-  private Double value;
+  private Double value = null;
   
   public RealId(String name) {
     super(name, DataType.REAL);
@@ -18,8 +18,8 @@ public class RealId extends AbstractIdentifier {
     return value;
   }
 
-  public void setValue(Double value) {
-    this.value = value;
+  public void setValue(Object value) {
+    this.value = (Double) value;
   }
 
   @Override
