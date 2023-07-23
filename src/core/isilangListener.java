@@ -1,5 +1,22 @@
 // Generated from isilang.g4 by ANTLR 4.7.1
 package src.core;
+
+  import src.ast.Program;
+  import src.ast.AbstractCommand;
+  import src.symbols.DataType;
+
+  import src.symbols.identifiers.AbstractIdentifier;
+  import src.symbols.identifiers.IntegerId;
+  import src.symbols.identifiers.RealId;
+  import src.symbols.identifiers.BooleanId;
+
+  import src.symbols.IdTable;
+  
+  import src.exceptions.semanticException;
+
+  import java.util.ArrayList;
+  import java.util.List;
+
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -18,16 +35,6 @@ public interface isilangListener extends ParseTreeListener {
 	 */
 	void exitProgram(isilangParser.ProgramContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link isilangParser#declare}.
-	 * @param ctx the parse tree
-	 */
-	void enterDeclare(isilangParser.DeclareContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link isilangParser#declare}.
-	 * @param ctx the parse tree
-	 */
-	void exitDeclare(isilangParser.DeclareContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link isilangParser#block}.
 	 * @param ctx the parse tree
 	 */
@@ -38,25 +45,15 @@ public interface isilangListener extends ParseTreeListener {
 	 */
 	void exitBlock(isilangParser.BlockContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link isilangParser#type}.
+	 * Enter a parse tree produced by {@link isilangParser#codeblock}.
 	 * @param ctx the parse tree
 	 */
-	void enterType(isilangParser.TypeContext ctx);
+	void enterCodeblock(isilangParser.CodeblockContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link isilangParser#type}.
+	 * Exit a parse tree produced by {@link isilangParser#codeblock}.
 	 * @param ctx the parse tree
 	 */
-	void exitType(isilangParser.TypeContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link isilangParser#lista_var}.
-	 * @param ctx the parse tree
-	 */
-	void enterLista_var(isilangParser.Lista_varContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link isilangParser#lista_var}.
-	 * @param ctx the parse tree
-	 */
-	void exitLista_var(isilangParser.Lista_varContext ctx);
+	void exitCodeblock(isilangParser.CodeblockContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link isilangParser#cmd}.
 	 * @param ctx the parse tree
@@ -67,6 +64,26 @@ public interface isilangListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitCmd(isilangParser.CmdContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link isilangParser#cmdDeclare}.
+	 * @param ctx the parse tree
+	 */
+	void enterCmdDeclare(isilangParser.CmdDeclareContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link isilangParser#cmdDeclare}.
+	 * @param ctx the parse tree
+	 */
+	void exitCmdDeclare(isilangParser.CmdDeclareContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link isilangParser#cmdDeclare2}.
+	 * @param ctx the parse tree
+	 */
+	void enterCmdDeclare2(isilangParser.CmdDeclare2Context ctx);
+	/**
+	 * Exit a parse tree produced by {@link isilangParser#cmdDeclare2}.
+	 * @param ctx the parse tree
+	 */
+	void exitCmdDeclare2(isilangParser.CmdDeclare2Context ctx);
 	/**
 	 * Enter a parse tree produced by {@link isilangParser#cmdRead}.
 	 * @param ctx the parse tree
@@ -108,6 +125,26 @@ public interface isilangListener extends ParseTreeListener {
 	 */
 	void exitCmdAttr(isilangParser.CmdAttrContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link isilangParser#cmdAttr2}.
+	 * @param ctx the parse tree
+	 */
+	void enterCmdAttr2(isilangParser.CmdAttr2Context ctx);
+	/**
+	 * Exit a parse tree produced by {@link isilangParser#cmdAttr2}.
+	 * @param ctx the parse tree
+	 */
+	void exitCmdAttr2(isilangParser.CmdAttr2Context ctx);
+	/**
+	 * Enter a parse tree produced by {@link isilangParser#cmdWhile}.
+	 * @param ctx the parse tree
+	 */
+	void enterCmdWhile(isilangParser.CmdWhileContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link isilangParser#cmdWhile}.
+	 * @param ctx the parse tree
+	 */
+	void exitCmdWhile(isilangParser.CmdWhileContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link isilangParser#expr}.
 	 * @param ctx the parse tree
 	 */
@@ -118,23 +155,73 @@ public interface isilangListener extends ParseTreeListener {
 	 */
 	void exitExpr(isilangParser.ExprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link isilangParser#term}.
+	 * Enter a parse tree produced by {@link isilangParser#boolExpr}.
 	 * @param ctx the parse tree
 	 */
-	void enterTerm(isilangParser.TermContext ctx);
+	void enterBoolExpr(isilangParser.BoolExprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link isilangParser#term}.
+	 * Exit a parse tree produced by {@link isilangParser#boolExpr}.
 	 * @param ctx the parse tree
 	 */
-	void exitTerm(isilangParser.TermContext ctx);
+	void exitBoolExpr(isilangParser.BoolExprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link isilangParser#factor}.
+	 * Enter a parse tree produced by {@link isilangParser#numberExpr}.
 	 * @param ctx the parse tree
 	 */
-	void enterFactor(isilangParser.FactorContext ctx);
+	void enterNumberExpr(isilangParser.NumberExprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link isilangParser#factor}.
+	 * Exit a parse tree produced by {@link isilangParser#numberExpr}.
 	 * @param ctx the parse tree
 	 */
-	void exitFactor(isilangParser.FactorContext ctx);
+	void exitNumberExpr(isilangParser.NumberExprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link isilangParser#numberTerm}.
+	 * @param ctx the parse tree
+	 */
+	void enterNumberTerm(isilangParser.NumberTermContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link isilangParser#numberTerm}.
+	 * @param ctx the parse tree
+	 */
+	void exitNumberTerm(isilangParser.NumberTermContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link isilangParser#numberFactor}.
+	 * @param ctx the parse tree
+	 */
+	void enterNumberFactor(isilangParser.NumberFactorContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link isilangParser#numberFactor}.
+	 * @param ctx the parse tree
+	 */
+	void exitNumberFactor(isilangParser.NumberFactorContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link isilangParser#realExpr}.
+	 * @param ctx the parse tree
+	 */
+	void enterRealExpr(isilangParser.RealExprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link isilangParser#realExpr}.
+	 * @param ctx the parse tree
+	 */
+	void exitRealExpr(isilangParser.RealExprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link isilangParser#realTerm}.
+	 * @param ctx the parse tree
+	 */
+	void enterRealTerm(isilangParser.RealTermContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link isilangParser#realTerm}.
+	 * @param ctx the parse tree
+	 */
+	void exitRealTerm(isilangParser.RealTermContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link isilangParser#realFactor}.
+	 * @param ctx the parse tree
+	 */
+	void enterRealFactor(isilangParser.RealFactorContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link isilangParser#realFactor}.
+	 * @param ctx the parse tree
+	 */
+	void exitRealFactor(isilangParser.RealFactorContext ctx);
 }

@@ -5,6 +5,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 
 import src.core.isilangLexer;
 import src.core.isilangParser;
+import src.exceptions.semanticException;
 
 /**
  * Arquivos fonte: .isi
@@ -22,8 +23,11 @@ public class Main {
       isilangParser parser = new isilangParser(tokenStream);
 
       parser.program();
-
-      System.out.println("Compilation Successful");
+      
+      //System.out.println("Compilation Successful");
+    }
+    catch (semanticException e) {
+      System.err.println("Semantic error - " + e.getMessage());
     }
     catch(Exception e) {
       System.err.println("ERROR " + e.getMessage());

@@ -1,6 +1,23 @@
 // Generated from isilang.g4 by ANTLR 4.7.1
 package src.core;
 
+  import src.ast.Program;
+  import src.ast.AbstractCommand;
+  import src.symbols.DataType;
+
+  import src.symbols.identifiers.AbstractIdentifier;
+  import src.symbols.identifiers.IntegerId;
+  import src.symbols.identifiers.RealId;
+  import src.symbols.identifiers.BooleanId;
+
+  import src.symbols.IdTable;
+  
+  import src.exceptions.semanticException;
+
+  import java.util.ArrayList;
+  import java.util.List;
+
+
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -28,18 +45,6 @@ public class isilangBaseListener implements isilangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDeclare(isilangParser.DeclareContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitDeclare(isilangParser.DeclareContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterBlock(isilangParser.BlockContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -52,25 +57,13 @@ public class isilangBaseListener implements isilangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterType(isilangParser.TypeContext ctx) { }
+	@Override public void enterCodeblock(isilangParser.CodeblockContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitType(isilangParser.TypeContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterLista_var(isilangParser.Lista_varContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitLista_var(isilangParser.Lista_varContext ctx) { }
+	@Override public void exitCodeblock(isilangParser.CodeblockContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -83,6 +76,30 @@ public class isilangBaseListener implements isilangListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitCmd(isilangParser.CmdContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCmdDeclare(isilangParser.CmdDeclareContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCmdDeclare(isilangParser.CmdDeclareContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCmdDeclare2(isilangParser.CmdDeclare2Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCmdDeclare2(isilangParser.CmdDeclare2Context ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -136,6 +153,30 @@ public class isilangBaseListener implements isilangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterCmdAttr2(isilangParser.CmdAttr2Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCmdAttr2(isilangParser.CmdAttr2Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCmdWhile(isilangParser.CmdWhileContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCmdWhile(isilangParser.CmdWhileContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterExpr(isilangParser.ExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -148,25 +189,85 @@ public class isilangBaseListener implements isilangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTerm(isilangParser.TermContext ctx) { }
+	@Override public void enterBoolExpr(isilangParser.BoolExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTerm(isilangParser.TermContext ctx) { }
+	@Override public void exitBoolExpr(isilangParser.BoolExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFactor(isilangParser.FactorContext ctx) { }
+	@Override public void enterNumberExpr(isilangParser.NumberExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFactor(isilangParser.FactorContext ctx) { }
+	@Override public void exitNumberExpr(isilangParser.NumberExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterNumberTerm(isilangParser.NumberTermContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNumberTerm(isilangParser.NumberTermContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterNumberFactor(isilangParser.NumberFactorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNumberFactor(isilangParser.NumberFactorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterRealExpr(isilangParser.RealExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitRealExpr(isilangParser.RealExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterRealTerm(isilangParser.RealTermContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitRealTerm(isilangParser.RealTermContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterRealFactor(isilangParser.RealFactorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitRealFactor(isilangParser.RealFactorContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

@@ -1,0 +1,10 @@
+programa
+declare REAL b.
+declare INTEIRO a.
+declare BOOLEANO c.
+leia(a).
+escreva(a).
+se (b > b) entao {
+  escreva(a)..
+}
+fimprog.

@@ -1,8 +1,20 @@
 // Generated from d:\ESTUDO\repositorios\GlyphoBE\isilang.g4 by ANTLR 4.9.2
 
+  import src.ast.Program;
+  import src.ast.AbstractCommand;
   import src.symbols.DataType;
-  import src.symbols.Identifier;
-  import src.symbols.SymbolTable;
+
+  import src.symbols.identifiers.AbstractIdentifier;
+  import src.symbols.identifiers.IntegerId;
+  import src.symbols.identifiers.RealId;
+  import src.symbols.identifiers.BooleanId;
+
+  import src.symbols.IdTable;
+  
+  import src.exceptions.semanticException;
+
+  import java.util.ArrayList;
+  import java.util.List;
 
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
@@ -93,9 +105,27 @@ public class isilangLexer extends Lexer {
 	}
 
 
-	  private SymbolTable st = new SymbolTable();
-	  private DataType currentType;
+	  private Program program = new Program();
+	  private List<AbstractCommand> mainThread = new ArrayList<AbstractCommand>();
+	  private IdTable st = new IdTable();
+	  public static DataType currentType;
+	  public static DataType currentExprType;
+	  private AbstractIdentifier currentId;
 	  private String idName;
+
+	  public void isIdDeclared(String idName) {
+	    if (!st.exists(idName)) {
+	      throw new semanticException("Identifier " + idName + " not declared");
+	    }
+	  }
+
+	  public void isIdTypeOk(String idName, DataType type) {
+	    System.out.println(st.get(idName).getType());
+	    System.out.println(type);
+	    if (st.get(idName).getType() != type) {
+	      throw new semanticException("Identifier used in the wrong type of expression");
+	    }
+	  }
 
 
 	public isilangLexer(CharStream input) {
@@ -132,13 +162,13 @@ public class isilangLexer extends Lexer {
 	private void TYPE_action(RuleContext _localctx, int actionIndex) {
 		switch (actionIndex) {
 		case 0:
-			 currentType = DataType.INTEGER; 
+			 isilangParser.currentType = DataType.INTEGER; 
 			break;
 		case 1:
-			 currentType = DataType.REAL;    
+			 isilangParser.currentType = DataType.REAL;    
 			break;
 		case 2:
-			 currentType = DataType.BOOLEAN; 
+			 isilangParser.currentType = DataType.BOOLEAN; 
 			break;
 		}
 	}

@@ -1,7 +1,7 @@
 package src.symbols;
 
 public enum DataType {
-  INTERGER,
+  INTEGER,
   REAL,
   BOOLEAN
 }
