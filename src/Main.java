@@ -27,7 +27,7 @@ public class Main {
       //System.out.println("Compilation Successful");
     }
     catch (semanticException e) {
-      System.err.println("Semantic error - " + e.getMessage());
+      System.err.println(e.getMessage());
     }
     catch(Exception e) {
       System.err.println("ERROR " + e.getMessage());

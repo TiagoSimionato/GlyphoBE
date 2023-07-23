@@ -155,6 +155,26 @@ public interface isilangListener extends ParseTreeListener {
 	 */
 	void exitExpr(isilangParser.ExprContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link isilangParser#term}.
+	 * @param ctx the parse tree
+	 */
+	void enterTerm(isilangParser.TermContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link isilangParser#term}.
+	 * @param ctx the parse tree
+	 */
+	void exitTerm(isilangParser.TermContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link isilangParser#factor}.
+	 * @param ctx the parse tree
+	 */
+	void enterFactor(isilangParser.FactorContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link isilangParser#factor}.
+	 * @param ctx the parse tree
+	 */
+	void exitFactor(isilangParser.FactorContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link isilangParser#boolExpr}.
 	 * @param ctx the parse tree
 	 */
@@ -164,64 +184,4 @@ public interface isilangListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitBoolExpr(isilangParser.BoolExprContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link isilangParser#numberExpr}.
-	 * @param ctx the parse tree
-	 */
-	void enterNumberExpr(isilangParser.NumberExprContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link isilangParser#numberExpr}.
-	 * @param ctx the parse tree
-	 */
-	void exitNumberExpr(isilangParser.NumberExprContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link isilangParser#numberTerm}.
-	 * @param ctx the parse tree
-	 */
-	void enterNumberTerm(isilangParser.NumberTermContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link isilangParser#numberTerm}.
-	 * @param ctx the parse tree
-	 */
-	void exitNumberTerm(isilangParser.NumberTermContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link isilangParser#numberFactor}.
-	 * @param ctx the parse tree
-	 */
-	void enterNumberFactor(isilangParser.NumberFactorContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link isilangParser#numberFactor}.
-	 * @param ctx the parse tree
-	 */
-	void exitNumberFactor(isilangParser.NumberFactorContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link isilangParser#realExpr}.
-	 * @param ctx the parse tree
-	 */
-	void enterRealExpr(isilangParser.RealExprContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link isilangParser#realExpr}.
-	 * @param ctx the parse tree
-	 */
-	void exitRealExpr(isilangParser.RealExprContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link isilangParser#realTerm}.
-	 * @param ctx the parse tree
-	 */
-	void enterRealTerm(isilangParser.RealTermContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link isilangParser#realTerm}.
-	 * @param ctx the parse tree
-	 */
-	void exitRealTerm(isilangParser.RealTermContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link isilangParser#realFactor}.
-	 * @param ctx the parse tree
-	 */
-	void enterRealFactor(isilangParser.RealFactorContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link isilangParser#realFactor}.
-	 * @param ctx the parse tree
-	 */
-	void exitRealFactor(isilangParser.RealFactorContext ctx);
 }

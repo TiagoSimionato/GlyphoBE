@@ -2,9 +2,15 @@ grammar isilang;
 
 /**
 TODO:
->verificar se resultado da expressão é compativel com o tipo
->ta caindo na regra do numero??????
->geração de codigo
+>Análise Semântica:
+  >verificar se resultado da expressão é compativel com o tipo
+  >incluir tipo string
+  >Verificar se a variável foi declarada e não foi usada
+  >Verificar se uma variável está sendo usada sem ter valor inicial
+>Geração de Código:
+  >A própria geração em si
+  >Atribuições realizadas corretamente
+  >Operações Aritméticas executadas corretamente
 */
 
 @header {
@@ -33,6 +39,7 @@ TODO:
   public static DataType currentExprType;
   private AbstractIdentifier currentId;
   private String idName;
+  private boolean isExprEvaluating = false;
 
   public void isIdDeclared(String idName) {
     if (!st.exists(idName)) {
@@ -40,12 +47,22 @@ TODO:
     }
   }
 
-  public void isIdTypeOk(String idName, DataType type) {
-    System.out.println(st.get(idName).getType());
-    System.out.println(type);
-    if (st.get(idName).getType() != type) {
-      throw new semanticException("Identifier used in the wrong type of expression");
+  public void exprTypeCheck(DataType type, int line) {
+    if (!isExprEvaluating) {
+      isExprEvaluating = true;
+      currentExprType = type;
+    } else {
+      if (type != currentExprType) {
+        throw new semanticException("At line " + line + ", expression type missmatch. Expecting " + currentExprType + " but found " + type);
+      }
     }
+  }
+
+  public void endExprEval(DataType expectedType, int line) {
+    if (currentExprType != expectedType) {
+      throw new semanticException("At line " + line + ", expression type should be " + expectedType + " but found " + currentExprType);
+    }
+    isExprEvaluating = false;
   }
 }
 
@@ -55,7 +72,7 @@ block : (cmd)* | codeblock;
 
 codeblock : OB (cmd)* CB | cmd;
 
-cmd : cmdDeclare FP | cmdRead FP | cmdWrite FP | cmdIf | cmdAttr FP | cmdWhile | FP;
+cmd : cmdDeclare FP | cmdRead FP | cmdWrite FP | cmdAttr FP | cmdIf | cmdWhile | FP;
 
 cmdDeclare : 'declare' TYPE cmdDeclare2 (COMMA cmdDeclare2)*;
 
@@ -72,10 +89,10 @@ cmdDeclare2: ID {
         st.add(idName, new RealId(idName));
       }
       else {
-        throw new semanticException("Unexpected Type Declared");
+        throw new semanticException("At line " + _ctx.getStart().getLine() + ", unexpected Type Declared");
       }
     } else {
-      throw new semanticException("Identifier " + idName + " already declared");
+      throw new semanticException("At line " + _ctx.getStart().getLine() + ", identifier " + idName + " already declared");
     }
   }
 	(cmdAttr2)?
@@ -87,9 +104,12 @@ cmdRead : 'leia' OP ID {
   CP
 ;
 
-cmdWrite : 'escreva' OP (TEXT | ID) CP;
+cmdWrite : 'escreva' OP (TEXT | expr {}
+  ) CP
+;
 
-cmdIf : 'se' OP boolExpr CP 'entao' codeblock ('ou se' OP boolExpr CP 'entao' codeblock)? ('senao' codeblock)?;
+cmdIf : 'se' OP boolExpr CP 'entao' codeblock ('ou se' OP boolExpr CP 'entao' codeblock)? ('senao' codeblock)?
+;
 
 cmdAttr : ID {
     idName = _input.LT(-1).getText();
@@ -100,55 +120,43 @@ cmdAttr : ID {
 ;
 
 cmdAttr2 : ATTR expr {
-    System.out.println("Tipo expr atual: " + currentExprType);
-    if (currentExprType != currentId.getType()) {
-      throw new semanticException("Expression type does not match Identifier type");
+    endExprEval(currentId.getType(), _ctx.getStart().getLine());
+  }
+;
+
+cmdWhile : 'enquanto' OP boolExpr CP codeblock
+;
+
+expr : term SUM expr | term SUB expr | term;
+
+term : factor MUL term | factor DIV term | factor;
+
+factor : NUMBER {
+    exprTypeCheck(DataType.INTEGER, _ctx.getStart().getLine());
+  }
+  | REAL {
+    exprTypeCheck(DataType.REAL, _ctx.getStart().getLine());
+  }
+  | BOOLEAN {
+    exprTypeCheck(DataType.BOOLEAN, _ctx.getStart().getLine());
+  }
+  | ID {
+    idName = _input.LT(-1).getText();
+    isIdDeclared(idName);
+    exprTypeCheck(st.get(idName).getType(), _ctx.getStart().getLine());
+  }
+  | OP expr CP
+;
+
+boolExpr : ID {
+    idName = _input.LT(-1).getText();
+    isIdDeclared(idName);
+    if (st.get(idName).getType() != DataType.BOOLEAN) {
+      throw new semanticException("Identifier should have BOOLEAN type");
     }
   }
-;
-
-cmdWhile : 'enquanto' OP boolExpr CP codeblock;
-
-expr : numberExpr { currentExprType = DataType.INTEGER; System.out.println("Setei tipo expr");}
-  | boolExpr      { currentExprType = DataType.BOOLEAN;System.out.println("Setei tipo expr"); }
-  | realExpr      { currentExprType = DataType.REAL;System.out.println("Setei tipo expr");    }
-;
-
-boolExpr : numberExpr {System.out.println("REGRA DO NUMERO");} RELOP numberExpr
-  | realExpr {System.out.println("REGRA DO REAL");} RELOP realExpr
-  | boolExpr {System.out.println("REGRA DO BOOLEANO");} RELOP boolExpr
-  | ID {
-    idName = _input.LT(-1).getText();
-    isIdDeclared(idName);
-    isIdTypeOk(idName, DataType.BOOLEAN);
-  }
-;
-
-numberExpr : numberTerm SUM numberExpr | numberTerm SUB numberExpr | numberTerm;
-
-numberTerm : numberFactor MUL numberTerm | numberFactor DIV numberTerm | numberFactor;
-
-numberFactor : NUMBER
-  | ID {
-    idName = _input.LT(-1).getText();
-    if (st.get(idName).getType() != DataType.INTEGER) {
-      exitRule();
-    }
-    isIdDeclared(idName);
-    isIdTypeOk(idName, DataType.INTEGER);
-  }
-  | OP numberExpr CP
-;
-
-realExpr : realTerm SUM realExpr | realTerm SUB realExpr | realTerm;
-
-realTerm : realFactor MUL realTerm | realFactor DIV realTerm | realFactor;
-
-realFactor : REAL
-  | ID {
-    idName = _input.LT(-1).getText();
-    isIdDeclared(idName);
-    isIdTypeOk(idName, DataType.REAL);
+  | expr RELOP expr {
+    endExprEval(currentExprType, _ctx.getStart().getLine());
   }
 ;
 
@@ -159,7 +167,9 @@ TYPE : 'INTEIRO' { isilangParser.currentType = DataType.INTEGER; }
 
 NUMBER : [0-9]+;
 
-REAL   : [0-9]+'.'[0-9]+'R';
+REAL   : [0-9]+ ('.'[0-9]+)? 'R';
+
+BOOLEAN : 'VERDADEIRO' | 'FALSO';
 
 TEXT   : '"' ([a-zA-Z0-9] | ' ' | '\t' | '!' | '-')* '"';
 

@@ -2,9 +2,10 @@ programa
 declare REAL b.
 declare INTEIRO a.
 declare BOOLEANO c.
+a := VERDADEIRO.
 leia(a).
 escreva(a).
-se (b > b) entao {
+se (a > a) entao {
   escreva(a)..
 }
 fimprog.
