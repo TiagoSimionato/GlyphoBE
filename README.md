@@ -6,6 +6,10 @@
 
 `java -cp ./antlr-4.7.1-complete.jar org.antlr.v4.Tool ./src/isilang.g4 -o ./src/main/java/br/edu/ufabc/glyphobe/core -package br.edu.ufabc.glyphobe.core`
 
+## Para rodar o servidor com o Spring
+
+`.\mvnw spring-boot:run`
+
 ## TODO
 
 - Editor Highlight (simulando uma pequena IDE)

@@ -1,5 +1,7 @@
 package br.edu.ufabc.glyphobe;
 
+import java.io.IOException;
+
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
@@ -14,8 +16,16 @@ import br.edu.ufabc.glyphobe.exceptions.semanticException;
 public class Glypho {
   public static void main(String[] args) {
     try {
-      isilangLexer lexer = new isilangLexer(CharStreams.fromFileName("input.isi"));
-
+      System.out.println(CharStreams.fromFileName("input.isi").toString());
+      compile(CharStreams.fromFileName("input.isi").toString());
+    } catch (IOException e) {
+      System.out.println("No such file in directory");
+    }
+  }
+  
+  public static String compile(String code) {
+    try {
+      isilangLexer lexer = new isilangLexer(CharStreams.fromString(code));
       //Fluxo de tokens para passar para o parser
       CommonTokenStream tokenStream = new CommonTokenStream(lexer);
 
@@ -23,14 +33,14 @@ public class Glypho {
       isilangParser parser = new isilangParser(tokenStream);
 
       parser.program();
-      
-      //System.out.println("Compilation Successful");
+
+      return "Compilation Successful";
     }
     catch (semanticException e) {
-      System.err.println(e.getMessage());
+      return e.getMessage();
     }
     catch(Exception e) {
-      System.err.println("ERROR " + e.getMessage());
+      return "UNKNOWN ERROR: " + e.getMessage();
     }
   }
 }
