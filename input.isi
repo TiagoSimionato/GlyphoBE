@@ -1,6 +1,6 @@
 programa
 declare REAL b := 1R.
-declare INTEIRO a.
+declarasdasde INTEIRO a.
 declare BOOLEANO c := FALSO.
 a := 2.
 leia(a).

@@ -4,7 +4,7 @@
 
 ## Para Executar o ANTLR4
 
-`java -cp ./antlr-4.7.1-complete.jar org.antlr.v4.Tool isilang.g4 -o ./src/core -package src.core`
+`java -cp ./antlr-4.7.1-complete.jar org.antlr.v4.Tool ./src/isilang.g4 -o ./src/main/java/br/edu/ufabc/glyphobe/core -package br.edu.ufabc.glyphobe.core`
 
 ## TODO
 
