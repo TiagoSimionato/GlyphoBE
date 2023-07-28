@@ -5,8 +5,17 @@ declare BOOLEANO c := FALSO.
 a := 2.
 leia(a).
 escreva(a).
-se (a > a) entao {
+se ((a) > a) entao {
   escreva(a)..
   leia(b).
+}
+ou se (c) entao {
+  escreva(c).
+}
+senao {
+  escreva(b).
+}
+enquanto (a <> 1) {
+  a := a + 1.
 }
 fimprog.

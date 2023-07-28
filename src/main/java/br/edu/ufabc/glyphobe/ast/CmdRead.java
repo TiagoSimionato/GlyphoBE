@@ -6,18 +6,15 @@ public class CmdRead extends AbstractCommand {
 
   private AbstractIdentifier id;
 
-  public CmdRead(AbstractIdentifier id) {
-    super();
+  public CmdRead(String lang, AbstractIdentifier id) {
+    super(lang);
     this.id = id;
-  }
-
-  public CmdRead() {
-    super();
   }
 
   @Override
   public String generateCode() {
-    return "";
+    if (language == "java") return ""; /*TODO*/
+    else /*js*/ return id.getName() + " = " + "prompt(\"Type your input\");\n";
   }
 
   @Override

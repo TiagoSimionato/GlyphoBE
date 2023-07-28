@@ -7,14 +7,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class CompileController {
+
   @CrossOrigin(origins = {"http://127.0.0.1:5500/", ""})
   @GetMapping("/compile")
   public Result compile(@RequestHeader(value = "code", defaultValue = "programafimprog.") String code) {
     code = code.substring(1, code.length() - 1).replace("\\n", "\n");
-    System.out.println("\n" + code + "\n");
-
-    String result = Glypho.compile(code);
+    
+    Glypho g = new Glypho("js", code);
+    String result = g.getCompilationResult();
     System.out.println(result);
-    return new Result(result);
+    return new Result(result, g.getTargetCode());
   }
 }

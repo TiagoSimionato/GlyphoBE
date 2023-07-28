@@ -5,14 +5,23 @@ package br.edu.ufabc.glyphobe.core;
   import br.edu.ufabc.glyphobe.ast.AbstractCommand;
   import br.edu.ufabc.glyphobe.ast.CmdRead;
   import br.edu.ufabc.glyphobe.ast.CmdWrite;
+  import br.edu.ufabc.glyphobe.ast.CmdAttr;
+  import br.edu.ufabc.glyphobe.ast.CmdIf;
+  import br.edu.ufabc.glyphobe.ast.CmdWhile;
+  import br.edu.ufabc.glyphobe.ast.CmdToken;
 
   import br.edu.ufabc.glyphobe.symbols.identifiers.AbstractIdentifier;
   import br.edu.ufabc.glyphobe.symbols.identifiers.IntegerId;
   import br.edu.ufabc.glyphobe.symbols.identifiers.RealId;
   import br.edu.ufabc.glyphobe.symbols.identifiers.BooleanId;
-
   import br.edu.ufabc.glyphobe.symbols.DataType;
   import br.edu.ufabc.glyphobe.symbols.IdTable;
+
+  import br.edu.ufabc.glyphobe.expressions.ExpressionString;
+  import br.edu.ufabc.glyphobe.expressions.IntegerExpression;
+  import br.edu.ufabc.glyphobe.expressions.RealExpression;
+  import br.edu.ufabc.glyphobe.expressions.BooleanExpression;
+  import br.edu.ufabc.glyphobe.expressions.OperatorExpression;
   
   import br.edu.ufabc.glyphobe.exceptions.semanticException;
 

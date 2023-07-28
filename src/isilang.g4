@@ -16,14 +16,23 @@ TODO:
   import br.edu.ufabc.glyphobe.ast.AbstractCommand;
   import br.edu.ufabc.glyphobe.ast.CmdRead;
   import br.edu.ufabc.glyphobe.ast.CmdWrite;
+  import br.edu.ufabc.glyphobe.ast.CmdAttr;
+  import br.edu.ufabc.glyphobe.ast.CmdIf;
+  import br.edu.ufabc.glyphobe.ast.CmdWhile;
+  import br.edu.ufabc.glyphobe.ast.CmdToken;
 
   import br.edu.ufabc.glyphobe.symbols.identifiers.AbstractIdentifier;
   import br.edu.ufabc.glyphobe.symbols.identifiers.IntegerId;
   import br.edu.ufabc.glyphobe.symbols.identifiers.RealId;
   import br.edu.ufabc.glyphobe.symbols.identifiers.BooleanId;
-
   import br.edu.ufabc.glyphobe.symbols.DataType;
   import br.edu.ufabc.glyphobe.symbols.IdTable;
+
+  import br.edu.ufabc.glyphobe.expressions.ExpressionString;
+  import br.edu.ufabc.glyphobe.expressions.IntegerExpression;
+  import br.edu.ufabc.glyphobe.expressions.RealExpression;
+  import br.edu.ufabc.glyphobe.expressions.BooleanExpression;
+  import br.edu.ufabc.glyphobe.expressions.OperatorExpression;
   
   import br.edu.ufabc.glyphobe.exceptions.semanticException;
 
@@ -37,6 +46,7 @@ TODO:
   private Program program = new Program();
   private List<AbstractCommand> cThread = new ArrayList<AbstractCommand>();
   private String writeString;
+  private ExpressionString es = new ExpressionString();
 
   //Analise semantica
   private IdTable st = new IdTable();
@@ -76,6 +86,20 @@ TODO:
     }
     isExprEvaluating = false;
   }
+
+  public void showCmds() {
+    for (AbstractCommand cmd : program.getCommands()) {
+      System.out.println(cmd.generateCode());
+    }
+  }
+
+  public void setTargetLanguage(String lang) {
+    program.setLanguage(lang);
+  }
+
+  public String generateObjectCode() {
+    return program.generateTarget();
+  }
 }
 
 program : 'programa' block 'fimprog' FP {
@@ -89,7 +113,16 @@ program : 'programa' block 'fimprog' FP {
 
 block : (cmd)* | codeblock;
 
-codeblock : OB (cmd)* CB | cmd;
+codeblock : OB {
+    CmdToken cmd = new CmdToken(program.getLanguage(), _input.LT(-1).getText());
+    cThread.add(cmd);
+  }
+  (cmd)* CB {
+    cmd = new CmdToken(program.getLanguage(), _input.LT(-1).getText());
+    cThread.add(cmd);
+  }
+  | cmd
+;
 
 cmd : cmdDeclare FP | cmdRead FP | cmdWrite FP | cmdAttr FP | cmdIf | cmdWhile | FP;
 
@@ -129,7 +162,7 @@ cmdRead : 'leia' OP ID {
   }
   CP
   {
-    CmdRead cmd = new CmdRead(st.get(idName));
+    CmdRead cmd = new CmdRead(program.getLanguage(), st.get(idName));
     cThread.add(cmd);
   }
 ;
@@ -137,18 +170,34 @@ cmdRead : 'leia' OP ID {
 cmdWrite : 'escreva' OP (TEXT {
     writeString = _input.LT(-1).getText().substring(1, _input.LT(-1).getText().length()); //Substring para remover as aspas duplas
   } 
-  | expr {
+  | {es.resetExpr();} expr {
     endExprEval(currentExprType, _ctx.getStart().getLine());
     writeString = _input.LT(-1).getText(); //TODO VALOR PROPRIAMENTE DA EXPR
   }
   ) CP
   {
-    CmdWrite cmd = new CmdWrite(writeString);
+    CmdWrite cmd = new CmdWrite(program.getLanguage(), writeString);
     cThread.add(cmd);
   }
 ;
 
-cmdIf : 'se' OP boolExpr CP 'entao' codeblock ('ou se' OP boolExpr CP 'entao' codeblock)? ('senao' codeblock)?
+cmdIf : 'se' OP
+  {es.resetExpr();} boolExpr CP 'entao' {
+    CmdIf cmd = new CmdIf(program.getLanguage(), 1, es.getExpr());
+    cThread.add(cmd);
+  }
+  codeblock
+  ('ou se' OP
+  {es.resetExpr();} boolExpr CP 'entao' {
+    cmd = new CmdIf(program.getLanguage(), 2, es.getExpr());
+    cThread.add(cmd);
+  }
+  codeblock)?
+  ('senao' {
+    cmd = new CmdIf(program.getLanguage(), 3, "");
+    cThread.add(cmd);
+  }
+  codeblock)?
 ;
 
 cmdAttr : ID {
@@ -159,7 +208,8 @@ cmdAttr : ID {
   cmdAttr2
 ;
 
-cmdAttr2 : ATTR expr {
+cmdAttr2 : ATTR 
+    {es.resetExpr();} expr {
     endExprEval(currentId.getType(), _ctx.getStart().getLine());
     declaredOnly.remove(currentId.getName());
     if (currentId.getType() == DataType.INTEGER) {
@@ -169,24 +219,56 @@ cmdAttr2 : ATTR expr {
     } else {
       currentId.setValue(1.0d);
     }
+
+    CmdAttr cmd = new CmdAttr(program.getLanguage(), currentId, es.getExpr());
+    cThread.add(cmd);
   }
 ;
 
-cmdWhile : 'enquanto' OP boolExpr CP codeblock
+cmdWhile : 'enquanto' OP
+  {es.resetExpr();} boolExpr CP {
+    CmdWhile cmd = new CmdWhile(program.getLanguage(), es.getExpr());
+    cThread.add(cmd);
+  }
+  codeblock
 ;
 
-expr : term SUM expr | term SUB expr | term;
+expr : term SUM {
+    es.add(new OperatorExpression(program.getLanguage(), _input.LT(-1).getText()));
+  }
+  expr
+  | term SUB {
+    es.add(new OperatorExpression(program.getLanguage(), _input.LT(-1).getText()));
+  }
+  expr
+  | term
+;
 
-term : factor MUL term | factor DIV term | factor;
+term : factor MUL {
+    es.add(new OperatorExpression(program.getLanguage(), _input.LT(-1).getText()));
+  }
+  term
+  | factor DIV { 
+    es.add(new OperatorExpression(program.getLanguage(), _input.LT(-1).getText()));
+  }
+  term
+  | factor
+;
 
 factor : NUMBER {
     exprTypeCheck(DataType.INTEGER, _ctx.getStart().getLine());
+    
+    es.add(new IntegerExpression(program.getLanguage(), _input.LT(-1).getText()));
   }
   | REAL {
     exprTypeCheck(DataType.REAL, _ctx.getStart().getLine());
+    
+    es.add(new RealExpression(program.getLanguage(), _input.LT(-1).getText()));
   }
   | BOOLEAN {
     exprTypeCheck(DataType.BOOLEAN, _ctx.getStart().getLine());
+
+    es.add(new BooleanExpression(program.getLanguage(), _input.LT(-1).getText()));
   }
   | ID {
     idName = _input.LT(-1).getText();
@@ -194,8 +276,14 @@ factor : NUMBER {
     idHaveValue(idName, _input.LT(-1).getLine());
     declaredOnly.remove(idName);
     exprTypeCheck(st.get(idName).getType(), _ctx.getStart().getLine());
+
+    es.add(_input.LT(-1).getText());
   }
-  | OP expr CP
+  | OP {
+    es.add(_input.LT(-1).getText());
+  } expr CP {
+    es.add(_input.LT(-1).getText());
+  }
 ;
 
 boolExpr : ID {
@@ -206,8 +294,13 @@ boolExpr : ID {
       throw new semanticException("Identifier should have BOOLEAN type");
     }
     declaredOnly.remove(idName);
+
+    es.add(_input.LT(-1).getText());
   }
-  | expr RELOP expr {
+  | expr RELOP {
+    es.add(new OperatorExpression(program.getLanguage(), _input.LT(-1).getText()));
+  }
+  expr {
     endExprEval(currentExprType, _ctx.getStart().getLine());
   }
 ;
@@ -235,7 +328,7 @@ MUL    : '*';
 
 DIV    : '/';
 
-RELOP  : '<' | '>' | '>=' | '<=' | '==' | '!=';
+RELOP  : '<' | '>' | '>=' | '<=' | '==' | '<>';
 
 ID     : [a-zA-Z] ([a-zA-Z0-9])*;
 

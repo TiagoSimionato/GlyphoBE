@@ -1,12 +1,13 @@
 # GlyphoBE
- Repo for the Back-End of the Glypho Compiler
+ Repo containing the Back-End of the Glypho Compiler
 
+ The project was made using [ANTL](https://www.antlr.org/) to generate the compiler classes and [SPRING](https://spring.io/) to setup the project server 
 
-## Para Executar o ANTLR4
+## To Execute ANTLR4 and generate the source classes
 
 `java -cp ./antlr-4.7.1-complete.jar org.antlr.v4.Tool ./src/isilang.g4 -o ./src/main/java/br/edu/ufabc/glyphobe/core -package br.edu.ufabc.glyphobe.core`
 
-## Para rodar o servidor com o Spring
+## Starting the Server
 
 `.\mvnw spring-boot:run`
 
@@ -14,8 +15,8 @@
 
 - Editor Highlight (simulando uma pequena IDE)
 - Geração de várias linguagens-alvo
-- Uma API Rest para implementação do compilador
 - Operadores relacionais?
+- Revisar resposta da API Rest e tratar os retornos de compilação (retornar o código gerado)
 
 ## Erros semânticos implementados
 

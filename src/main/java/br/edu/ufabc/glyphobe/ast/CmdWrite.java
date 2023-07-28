@@ -3,20 +3,16 @@ package br.edu.ufabc.glyphobe.ast;
 public class CmdWrite extends AbstractCommand {
   
   private String text;
-
-  public CmdWrite(String text) {
-    super();
+  
+  public CmdWrite(String lang, String text) {
+    super(lang);
     this.text = text;
-  }
-
-  public CmdWrite() {
-    super();
   }
 
   @Override
   public String generateCode() {
-    "".substring(1, "".length());
-    return "";
+    if (language == "java") return "System.out.println(" + text + ");\n";
+    else /*js*/ return "alert(" + text + ");\n";
   }
 
   @Override

@@ -5,14 +5,23 @@ package br.edu.ufabc.glyphobe.core;
   import br.edu.ufabc.glyphobe.ast.AbstractCommand;
   import br.edu.ufabc.glyphobe.ast.CmdRead;
   import br.edu.ufabc.glyphobe.ast.CmdWrite;
+  import br.edu.ufabc.glyphobe.ast.CmdAttr;
+  import br.edu.ufabc.glyphobe.ast.CmdIf;
+  import br.edu.ufabc.glyphobe.ast.CmdWhile;
+  import br.edu.ufabc.glyphobe.ast.CmdToken;
 
   import br.edu.ufabc.glyphobe.symbols.identifiers.AbstractIdentifier;
   import br.edu.ufabc.glyphobe.symbols.identifiers.IntegerId;
   import br.edu.ufabc.glyphobe.symbols.identifiers.RealId;
   import br.edu.ufabc.glyphobe.symbols.identifiers.BooleanId;
-
   import br.edu.ufabc.glyphobe.symbols.DataType;
   import br.edu.ufabc.glyphobe.symbols.IdTable;
+
+  import br.edu.ufabc.glyphobe.expressions.ExpressionString;
+  import br.edu.ufabc.glyphobe.expressions.IntegerExpression;
+  import br.edu.ufabc.glyphobe.expressions.RealExpression;
+  import br.edu.ufabc.glyphobe.expressions.BooleanExpression;
+  import br.edu.ufabc.glyphobe.expressions.OperatorExpression;
   
   import br.edu.ufabc.glyphobe.exceptions.semanticException;
 
@@ -104,6 +113,7 @@ public class isilangLexer extends Lexer {
 	  private Program program = new Program();
 	  private List<AbstractCommand> cThread = new ArrayList<AbstractCommand>();
 	  private String writeString;
+	  private ExpressionString es = new ExpressionString();
 
 	  //Analise semantica
 	  private IdTable st = new IdTable();
@@ -142,6 +152,20 @@ public class isilangLexer extends Lexer {
 	      throw new semanticException("At line " + line + ", expression type should be " + expectedType + " but found " + currentExprType);
 	    }
 	    isExprEvaluating = false;
+	  }
+
+	  public void showCmds() {
+	    for (AbstractCommand cmd : program.getCommands()) {
+	      System.out.println(cmd.generateCode());
+	    }
+	  }
+
+	  public void setTargetLanguage(String lang) {
+	    program.setLanguage(lang);
+	  }
+
+	  public String generateObjectCode() {
+	    return program.generateTarget();
 	  }
 
 
@@ -260,7 +284,7 @@ public class isilangLexer extends Lexer {
 		"&\3\2\2\2\u00d1\u00d2\7,\2\2\u00d2(\3\2\2\2\u00d3\u00d4\7\61\2\2\u00d4"+
 		"*\3\2\2\2\u00d5\u00df\t\4\2\2\u00d6\u00d7\7@\2\2\u00d7\u00df\7?\2\2\u00d8"+
 		"\u00d9\7>\2\2\u00d9\u00df\7?\2\2\u00da\u00db\7?\2\2\u00db\u00df\7?\2\2"+
-		"\u00dc\u00dd\7#\2\2\u00dd\u00df\7?\2\2\u00de\u00d5\3\2\2\2\u00de\u00d6"+
+		"\u00dc\u00dd\7>\2\2\u00dd\u00df\7@\2\2\u00de\u00d5\3\2\2\2\u00de\u00d6"+
 		"\3\2\2\2\u00de\u00d8\3\2\2\2\u00de\u00da\3\2\2\2\u00de\u00dc\3\2\2\2\u00df"+
 		",\3\2\2\2\u00e0\u00e4\t\5\2\2\u00e1\u00e3\t\6\2\2\u00e2\u00e1\3\2\2\2"+
 		"\u00e3\u00e6\3\2\2\2\u00e4\u00e2\3\2\2\2\u00e4\u00e5\3\2\2\2\u00e5.\3"+
