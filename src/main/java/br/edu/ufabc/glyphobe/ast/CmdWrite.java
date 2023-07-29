@@ -14,8 +14,4 @@ public class CmdWrite extends AbstractCommand {
     if (language == "java") return "System.out.println(" + text + ");\n";
     else /*js*/ return "alert(" + text + ");\n";
   }
-
-  @Override
-  public void run() {
-  }
 }

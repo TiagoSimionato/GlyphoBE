@@ -30,9 +30,4 @@ public class CmdIf extends AbstractCommand {
   private String generateElse() {
     return "else ";
   }
-
-  @Override
-  public void run() {
-
-  }
 }

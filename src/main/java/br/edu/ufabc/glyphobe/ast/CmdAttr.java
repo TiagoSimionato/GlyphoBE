@@ -21,11 +21,6 @@ public class CmdAttr extends AbstractCommand {
     }
   }
 
-  @Override
-  public void run() {
-
-  }
-
   public AbstractIdentifier getId() {
     return id;
   }

@@ -13,11 +13,6 @@ public class CmdToken extends AbstractCommand {
     return format(token);
   }
 
-  @Override
-  public void run() {
-
-  }
-
   private String format(String token) {
     if (token.contains("{")) return token + "\n";
     if (token.contains("}")) return token + "\n";

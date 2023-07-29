@@ -16,8 +16,4 @@ public class CmdRead extends AbstractCommand {
     if (language == "java") return ""; /*TODO*/
     else /*js*/ return id.getName() + " = " + "prompt(\"Type your input\");\n";
   }
-
-  @Override
-  public void run() {
-  }
 }

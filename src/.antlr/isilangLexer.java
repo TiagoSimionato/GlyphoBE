@@ -2,6 +2,7 @@
 
   import br.edu.ufabc.glyphobe.ast.Program;
   import br.edu.ufabc.glyphobe.ast.AbstractCommand;
+  import br.edu.ufabc.glyphobe.ast.CmdDeclare;
   import br.edu.ufabc.glyphobe.ast.CmdRead;
   import br.edu.ufabc.glyphobe.ast.CmdWrite;
   import br.edu.ufabc.glyphobe.ast.CmdAttr;
@@ -22,7 +23,7 @@
   import br.edu.ufabc.glyphobe.expressions.BooleanExpression;
   import br.edu.ufabc.glyphobe.expressions.OperatorExpression;
   
-  import br.edu.ufabc.glyphobe.exceptions.semanticException;
+  import br.edu.ufabc.glyphobe.exceptions.SemanticError;
 
   import java.util.ArrayList;
   import java.util.List;
@@ -134,13 +135,13 @@ public class isilangLexer extends Lexer {
 
 	  public void isIdDeclared(String idName, int line) {
 	    if (!st.exists(idName)) {
-	      throw new semanticException("At line " + line + ", identifier [" + idName + "] not declared");
+	      throw new SemanticError("At line " + line + ", identifier [" + idName + "] not declared");
 	    }
 	  }
 
 	  public void idHaveValue(String idName, int line) {
 	    if (st.get(idName).getValue() == null) {
-	      throw new semanticException("At line " + line + ", identifier [" + idName + "] value was used but never assigned");
+	      throw new SemanticError("At line " + line + ", identifier [" + idName + "] value was used but never assigned");
 	    }
 	  }
 
@@ -150,14 +151,14 @@ public class isilangLexer extends Lexer {
 	      currentExprType = type;
 	    } else {
 	      if (type != currentExprType) {
-	        throw new semanticException("At line " + line + ", expression type missmatch. Expecting " + currentExprType + " but found " + type);
+	        throw new SemanticError("At line " + line + ", expression type missmatch. Expecting " + currentExprType + " but found " + type);
 	      }
 	    }
 	  }
 
 	  public void endExprEval(DataType expectedType, int line) {
 	    if (currentExprType != expectedType) {
-	      throw new semanticException("At line " + line + ", expression type should be " + expectedType + " but found " + currentExprType);
+	      throw new SemanticError("At line " + line + ", expression type should be " + expectedType + " but found " + currentExprType);
 	    }
 	    isExprEvaluating = false;
 	  }

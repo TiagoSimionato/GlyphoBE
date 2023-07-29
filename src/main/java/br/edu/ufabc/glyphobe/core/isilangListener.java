@@ -3,6 +3,7 @@ package br.edu.ufabc.glyphobe.core;
 
   import br.edu.ufabc.glyphobe.ast.Program;
   import br.edu.ufabc.glyphobe.ast.AbstractCommand;
+  import br.edu.ufabc.glyphobe.ast.CmdDeclare;
   import br.edu.ufabc.glyphobe.ast.CmdRead;
   import br.edu.ufabc.glyphobe.ast.CmdWrite;
   import br.edu.ufabc.glyphobe.ast.CmdAttr;
@@ -23,7 +24,7 @@ package br.edu.ufabc.glyphobe.core;
   import br.edu.ufabc.glyphobe.expressions.BooleanExpression;
   import br.edu.ufabc.glyphobe.expressions.OperatorExpression;
   
-  import br.edu.ufabc.glyphobe.exceptions.semanticException;
+  import br.edu.ufabc.glyphobe.exceptions.SemanticError;
 
   import java.util.ArrayList;
   import java.util.List;

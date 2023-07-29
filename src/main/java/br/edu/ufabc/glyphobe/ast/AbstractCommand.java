@@ -4,7 +4,6 @@ public abstract class AbstractCommand {
   protected String language;
   
   public abstract String generateCode();
-  public abstract void run();
 
   public AbstractCommand() {
     this.language = "js";

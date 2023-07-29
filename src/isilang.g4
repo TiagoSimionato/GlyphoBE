@@ -3,10 +3,10 @@ grammar isilang;
 /**
 TODO:
 >Análise Semântica:
-  >verificar se resultado da expressão é compativel com o tipo do identificador
+  >verificar se resultado da expressão é compativel com o tipo do identificador. ex atribuir 1 / 2 em inteiro
   >incluir tipo string?
 >Geração de Código:
-  >A própria geração em si
+  >Gerar código java
   >Atribuições realizadas corretamente
   >Operações Aritméticas executadas corretamente
 */
@@ -14,6 +14,7 @@ TODO:
 @header {
   import br.edu.ufabc.glyphobe.ast.Program;
   import br.edu.ufabc.glyphobe.ast.AbstractCommand;
+  import br.edu.ufabc.glyphobe.ast.CmdDeclare;
   import br.edu.ufabc.glyphobe.ast.CmdRead;
   import br.edu.ufabc.glyphobe.ast.CmdWrite;
   import br.edu.ufabc.glyphobe.ast.CmdAttr;
@@ -34,7 +35,7 @@ TODO:
   import br.edu.ufabc.glyphobe.expressions.BooleanExpression;
   import br.edu.ufabc.glyphobe.expressions.OperatorExpression;
   
-  import br.edu.ufabc.glyphobe.exceptions.semanticException;
+  import br.edu.ufabc.glyphobe.exceptions.SemanticError;
 
   import java.util.ArrayList;
   import java.util.List;
@@ -59,13 +60,13 @@ TODO:
 
   public void isIdDeclared(String idName, int line) {
     if (!st.exists(idName)) {
-      throw new semanticException("At line " + line + ", identifier [" + idName + "] not declared");
+      throw new SemanticError("At line " + line + ", identifier [" + idName + "] not declared");
     }
   }
 
   public void idHaveValue(String idName, int line) {
     if (st.get(idName).getValue() == null) {
-      throw new semanticException("At line " + line + ", identifier [" + idName + "] value was used but never assigned");
+      throw new SemanticError("At line " + line + ", identifier [" + idName + "] value was used but never assigned");
     }
   }
 
@@ -75,14 +76,14 @@ TODO:
       currentExprType = type;
     } else {
       if (type != currentExprType) {
-        throw new semanticException("At line " + line + ", expression type missmatch. Expecting " + currentExprType + " but found " + type);
+        throw new SemanticError("At line " + line + ", expression type missmatch. Expecting " + currentExprType + " but found " + type);
       }
     }
   }
 
   public void endExprEval(DataType expectedType, int line) {
     if (currentExprType != expectedType) {
-      throw new semanticException("At line " + line + ", expression type should be " + expectedType + " but found " + currentExprType);
+      throw new SemanticError("At line " + line + ", expression type should be " + expectedType + " but found " + currentExprType);
     }
     isExprEvaluating = false;
   }
@@ -104,7 +105,7 @@ TODO:
 
 program : 'programa' block 'fimprog' FP {
     if (declaredOnly.size() > 0) {
-      throw new semanticException("There are identifiers declared but not used starting at line " + declaredOnly.entrySet().iterator().next().getValue().getLine());
+      throw new SemanticError("There are identifiers declared but not used starting at line " + declaredOnly.entrySet().iterator().next().getValue().getLine());
     }
 
     program.setCommands(cThread);
@@ -144,12 +145,16 @@ cmdDeclare2: ID {
         declaredOnly.put(idName,_input.LT(-1));
       }
       else {
-        throw new semanticException("At line " + _ctx.getStart().getLine() + ", unexpected Type Declared");
+        throw new SemanticError("At line " + _ctx.getStart().getLine() + ", unexpected Type Declared");
       }
     } else {
-      throw new semanticException("At line " + _ctx.getStart().getLine() + ", identifier " + idName + " already declared");
+      throw new SemanticError("At line " + _ctx.getStart().getLine() + ", identifier " + idName + " already declared");
     }
     currentId = st.get(idName);
+  }
+  {
+    CmdDeclare cmd = new CmdDeclare(program.getLanguage(), currentId);
+    cThread.add(cmd);
   }
 	(cmdAttr2)?
 ;
@@ -291,7 +296,7 @@ boolExpr : ID {
     isIdDeclared(idName, _input.LT(-1).getLine());
     idHaveValue(idName, _input.LT(-1).getLine());
     if (st.get(idName).getType() != DataType.BOOLEAN) {
-      throw new semanticException("Identifier should have BOOLEAN type");
+      throw new SemanticError("Identifier should have BOOLEAN type");
     }
     declaredOnly.remove(idName);
 

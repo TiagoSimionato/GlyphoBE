@@ -10,12 +10,15 @@ se ((a) > a) entao {
   leia(b).
 }
 ou se (c) entao {
-  escreva(c).
+  escreva(c)
 }
 senao {
   escreva(b).
 }
 enquanto (a <> 1) {
   a := a + 1.
+  se (b <= 0.3R) entao {
+    b := 3.0R  + 4.2R.
+  }
 }
 fimprog.

@@ -4,10 +4,12 @@ import java.io.IOException;
 
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 
 import br.edu.ufabc.glyphobe.core.isilangLexer;
 import br.edu.ufabc.glyphobe.core.isilangParser;
-import br.edu.ufabc.glyphobe.exceptions.semanticException;
+import br.edu.ufabc.glyphobe.exceptions.SyntaxErrorListener;
+import br.edu.ufabc.glyphobe.exceptions.SemanticError;
 
 /**
  * Arquivos fonte: .isi
@@ -44,18 +46,24 @@ public class Glypho {
       //crio o parser a partir do tokenStream
       isilangParser parser = new isilangParser(tokenStream);
 
+      //Uso meu próprio error listener para manter track de todos os problemas e reportar no final
+      parser.removeErrorListeners();
+      SyntaxErrorListener listener = new SyntaxErrorListener();
+      parser.addErrorListener(listener);
+
       parser.setTargetLanguage(targetLanguage);
       //Expression Analysis
       parser.program();
 
-      parser.showCmds();
-
-      targetCode = parser.generateObjectCode();
-
-      compilationResult = "Compilation Successful\n";
+      if (parser.getNumberOfSyntaxErrors() <= 0) {
+        targetCode = parser.generateObjectCode();
+        compilationResult = "Compilation Successful\n";
+        return compilationResult;
+      }
+      compilationResult = "Compilation Failed\n" + listener.toString();
       return compilationResult;
     }
-    catch (semanticException e) {
+    catch (SemanticError e) {
       compilationResult = "Compilation Failed\n" + e.getMessage();
       return compilationResult;
     }
@@ -92,16 +100,25 @@ public class Glypho {
       //crio o parser a partir do tokenStream
       isilangParser parser = new isilangParser(tokenStream);
 
+      //Uso meu próprio error listener para manter track de todos os problemas e reportar no final
+      //parser.removeErrorListeners();
+      SyntaxErrorListener listener = new SyntaxErrorListener();
+      parser.addErrorListener(listener);
+
       parser.setTargetLanguage("js");
-
+      //Expression Analysis
       parser.program();
-      //parser.showCmds();
 
-      parser.generateObjectCode();
-
-      return "Compilation Successful";
+      if (parser.getNumberOfSyntaxErrors() <= 0) {
+        parser.generateObjectCode();
+        return "Compilation Successful\n";
+      }
+      return "Compilation Failed\n" + listener.toString();
     }
-    catch (semanticException e) {
+    catch (SemanticError e) {
+      return "Compilation Failed\n" + e.getMessage();
+    }
+    catch (ParseCancellationException e) {
       return "Compilation Failed\n" + e.getMessage();
     }
     catch(Exception e) {

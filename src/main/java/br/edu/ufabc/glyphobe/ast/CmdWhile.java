@@ -12,9 +12,4 @@ public class CmdWhile extends AbstractCommand{
   public String generateCode() {
     return "while (" + expr + ") ";
   }
-
-  @Override
-  public void run() {
-
-  }
 }
