@@ -11,12 +11,13 @@ public class Program {
   private String fileName;
   private List<AbstractCommand> cmds;
   private IdTable it;
-  private String language = "js";
+  private String language;
   private int blockLevel;
 
   public Program() {
     this.fileName = "output";
     this.cmds = new ArrayList<AbstractCommand>();
+    setLanguage("js");
     blockLevel = 0;
   }
 
@@ -25,6 +26,7 @@ public class Program {
       FileWriter fw = new FileWriter(fileName + "." + language);
       PrintWriter pw = new PrintWriter(fw);
       StringBuilder strBuilder = new StringBuilder();
+
       cmds.stream().forEach(c -> {
         if (c.generateCode().contains("{")) blockLevel++;
         else if (c.generateCode().contains("}")) blockLevel--;
@@ -51,10 +53,6 @@ public class Program {
       spaces += "  ";
     }
     return spaces;
-  }
-
-  public void run() {
-    
   }
 
   public List<AbstractCommand> getCommands() {

@@ -151,7 +151,7 @@ public class isilangLexer extends Lexer {
 	      currentExprType = type;
 	    } else {
 	      if (type != currentExprType) {
-	        throw new SemanticError("At line " + line + ", expression type missmatch. Expecting " + currentExprType + " but found " + type);
+	        throw new SemanticError("At line " + line + ", expression type missmatch. Expression started as " + currentExprType + " but found " + type);
 	      }
 	    }
 	  }

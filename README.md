@@ -14,9 +14,13 @@
 ## TODO
 
 - Editor Highlight (simulando uma pequena IDE)
+  - Fetch do back end perguntando por palavras chave?
 - Geração de várias linguagens-alvo
 - Operadores relacionais?
-- Revisar resposta da API Rest e tratar os retornos de compilação (retornar o código gerado)
+- Implementar erro semântico como subclasse de RecognitionError para tratar melhor error semânticos
+- Revisar resposta da API REST
+- Comentar o Código
+- Gravar o vídeo do projeto
 
 ## Erros semânticos implementados
 
