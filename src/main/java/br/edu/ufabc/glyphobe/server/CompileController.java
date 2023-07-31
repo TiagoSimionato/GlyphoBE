@@ -1,9 +1,11 @@
-package br.edu.ufabc.glyphobe;
+package br.edu.ufabc.glyphobe.server;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
+
+import br.edu.ufabc.glyphobe.Glypho;
 
 @RestController
 public class CompileController {
