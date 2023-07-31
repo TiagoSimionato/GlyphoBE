@@ -10,7 +10,7 @@ import br.edu.ufabc.glyphobe.Glypho;
 @RestController
 public class CompileController {
 
-  @CrossOrigin(origins = {"//127.0.0.1:5500/", "//tiago-simionato.github.io/"})
+  @CrossOrigin(origins = {"//127.0.0.1:5500/", "//tiago-simionato.github.io/", "//tiago-simionato.github.io/GlyphoFE/"})
   @GetMapping("/compile")
   public Result compile(@RequestHeader(value = "code", defaultValue = "programafimprog.") String code) {
     code = code.substring(1, code.length() - 1).replace("\\n", "\n");
