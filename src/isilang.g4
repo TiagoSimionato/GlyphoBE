@@ -173,11 +173,11 @@ cmdRead : 'leia' OP ID {
 ;
 
 cmdWrite : 'escreva' OP (TEXT {
-    writeString = _input.LT(-1).getText().substring(1, _input.LT(-1).getText().length()); //Substring para remover as aspas duplas
+    writeString = _input.LT(-1).getText(); 
   } 
   | {es.resetExpr();} expr {
     endExprEval(currentExprType, _ctx.getStart().getLine());
-    writeString = _input.LT(-1).getText(); //TODO VALOR PROPRIAMENTE DA EXPR
+    writeString = es.getExpr();
   }
   ) CP
   {
@@ -197,7 +197,7 @@ cmdIf : 'se' OP
     cmd = new CmdIf(program.getLanguage(), 2, es.getExpr());
     cThread.add(cmd);
   }
-  codeblock)?
+  codeblock)*
   ('senao' {
     cmd = new CmdIf(program.getLanguage(), 3, "");
     cThread.add(cmd);
@@ -301,6 +301,9 @@ boolExpr : ID {
     declaredOnly.remove(idName);
 
     es.add(_input.LT(-1).getText());
+  }
+  | BOOLEAN {
+    es.add(new BooleanExpression(program.getLanguage(), _input.LT(-1).getText()));
   }
   | expr RELOP {
     es.add(new OperatorExpression(program.getLanguage(), _input.LT(-1).getText()));

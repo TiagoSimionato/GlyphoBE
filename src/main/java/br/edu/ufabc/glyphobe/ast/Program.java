@@ -27,6 +27,8 @@ public class Program {
       PrintWriter pw = new PrintWriter(fw);
       StringBuilder strBuilder = new StringBuilder();
 
+      strBuilder.append(generatePreCode());
+
       cmds.stream().forEach(c -> {
         if (c.generateCode().contains("{")) blockLevel++;
         else if (c.generateCode().contains("}")) blockLevel--;
@@ -36,6 +38,9 @@ public class Program {
 
         strBuilder.append(blockSpaces + c.generateCode());
       });
+
+      strBuilder.append(generatePostCode());
+
       pw.println(strBuilder.toString());
       pw.close();
       fw.close();
@@ -53,6 +58,26 @@ public class Program {
       spaces += "  ";
     }
     return spaces;
+  }
+
+  private String generatePreCode() {
+    switch(language) {
+      case "java":
+        blockLevel++;
+        return "public class Main { \n"+
+          "  public static void main(String[] args) {\n";
+      default:
+        return "";
+    }
+  }
+
+  private String generatePostCode() {
+    switch(language) {
+      case "java":
+        return "  }\n}\n";
+      default:
+        return "";
+    }
   }
 
   public List<AbstractCommand> getCommands() {

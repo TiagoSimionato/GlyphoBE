@@ -39,23 +39,27 @@ public class Glypho {
   
   public String compile(String code) {
     try {
+      //Uso meu próprio error listener para manter track de todos os problemas e reportar no final
+      SyntaxErrorListener listener = new SyntaxErrorListener();
+
       isilangLexer lexer = new isilangLexer(CharStreams.fromString(code));
+      lexer.removeErrorListeners();
+      lexer.addErrorListener(listener);
+
       //Fluxo de tokens para passar para o parser
       CommonTokenStream tokenStream = new CommonTokenStream(lexer);
 
       //crio o parser a partir do tokenStream
       isilangParser parser = new isilangParser(tokenStream);
-
-      //Uso meu próprio error listener para manter track de todos os problemas e reportar no final
       parser.removeErrorListeners();
-      SyntaxErrorListener listener = new SyntaxErrorListener();
       parser.addErrorListener(listener);
 
       parser.setTargetLanguage(targetLanguage);
+
       //Expression Analysis
       parser.program();
 
-      if (parser.getNumberOfSyntaxErrors() <= 0) {
+      if (listener.getSyntaxErrors().size() <= 0) {
         targetCode = parser.generateObjectCode();
         compilationResult = "Compilation Successful\n";
         return compilationResult;
@@ -93,23 +97,27 @@ public class Glypho {
   //TODO: delete
   public static String compile(String code, String a) {
     try {
+      //Uso meu próprio error listener para manter track de todos os problemas e reportar no final
+      SyntaxErrorListener listener = new SyntaxErrorListener();
+
       isilangLexer lexer = new isilangLexer(CharStreams.fromString(code));
+      lexer.removeErrorListeners();
+      lexer.addErrorListener(listener);
+
       //Fluxo de tokens para passar para o parser
       CommonTokenStream tokenStream = new CommonTokenStream(lexer);
 
       //crio o parser a partir do tokenStream
       isilangParser parser = new isilangParser(tokenStream);
-
-      //Uso meu próprio error listener para manter track de todos os problemas e reportar no final
-      //parser.removeErrorListeners();
-      SyntaxErrorListener listener = new SyntaxErrorListener();
+      parser.removeErrorListeners();
       parser.addErrorListener(listener);
 
       parser.setTargetLanguage("js");
+      
       //Expression Analysis
       parser.program();
 
-      if (parser.getNumberOfSyntaxErrors() <= 0) {
+      if (listener.getSyntaxErrors().size() <= 0) {
         parser.generateObjectCode();
         return "Compilation Successful\n";
       }

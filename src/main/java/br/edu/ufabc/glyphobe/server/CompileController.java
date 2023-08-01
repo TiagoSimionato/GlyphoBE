@@ -13,11 +13,12 @@ public class CompileController {
   @CrossOrigin(origins = "*")
   @GetMapping("/compile")
   public Result compile(@RequestHeader(value = "code", defaultValue = "programafimprog.") String code) {
-    code = code.substring(1, code.length() - 1).replace("\\n", "\n");
+    code = code.substring(1, code.length() - 1).replace("\\n", "\n").replace("\\", "");
+    System.out.println(code);
     
     Glypho g = new Glypho("js", code);
     String result = g.getCompilationResult();
-    System.out.println(result);
-    return new Result(result, g.getTargetCode());
+    String targetCode = g.getTargetCode();
+    return new Result(result, targetCode);
   }
 }
