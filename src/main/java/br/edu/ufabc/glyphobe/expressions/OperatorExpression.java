@@ -7,8 +7,11 @@ public class OperatorExpression extends AbstractExpression{
 
   @Override
   public String eval() {
-    return " " + expr
-    .replace("<>", " != ")
-    + " ";
+    expr = expr.replace("<>", "!=");
+    if (language == "js") {
+      expr = expr.replace("==", "===")
+      .replace("!=", "!==");
+    }
+    return " " + expr + " ";
   }
 }

@@ -28,7 +28,9 @@ public class CmdDeclare extends AbstractCommand {
     switch (language) {
       case "java":
         return "int " + id.getName() + ";\n";
-      default: 
+      case "py":
+        return "";
+      default: /*js*/
         return "var " + id.getName() + ";\n";
     }
   }
@@ -37,7 +39,9 @@ public class CmdDeclare extends AbstractCommand {
     switch (language) {
       case "java":
         return "float " + id.getName() + ";\n";
-      default: 
+      case "py":
+        return "";
+      default: /*js*/
         return "var " + id.getName() + ";\n";
     }
   }
@@ -46,7 +50,9 @@ public class CmdDeclare extends AbstractCommand {
     switch (language) {
       case "java":
         return "boolean " + id.getName() + ";\n";
-      default: 
+      case "py":
+        return "";
+      default: /*js*/
         return "var " + id.getName() + ";\n";
     }
   }

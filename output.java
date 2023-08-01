@@ -25,22 +25,22 @@ public class output {
     if ((a) > a) {
       System.out.println(a);
       b = scanner.nextFloat();
-    }
+}
     else if (c) {
       System.out.println(c);
-    }
+}
     else if (true) {
       System.out.println("duvido");
-    }
+}
     else {
       System.out.println(b);
-    }
-    while (a  !=  1) {
+}
+    while (a != 1) {
       a = a + 1;
       if (b <= 0.3f) {
         b = 3.0f + 4.2f;
-      }
-    }
+}
+}
     scanner.close();
   }
 }

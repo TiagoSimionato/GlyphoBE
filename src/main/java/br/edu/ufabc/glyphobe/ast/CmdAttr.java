@@ -14,7 +14,12 @@ public class CmdAttr extends AbstractCommand {
 
   @Override
   public String generateCode() {
-    return id.getName() + " = " + expr + ";\n";
+    switch (language) {
+      case "py":
+        return id.getName() + " = " + expr + "\n";
+      default: /*js, java */
+        return id.getName() + " = " + expr + ";\n";
+    }
   }
 
   public AbstractIdentifier getId() {

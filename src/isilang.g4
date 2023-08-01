@@ -5,10 +5,6 @@ TODO:
 >Análise Semântica:
   >verificar se resultado da expressão é compativel com o tipo do identificador. ex atribuir 1 / 2 em inteiro
   >incluir tipo string?
->Geração de Código:
-  >Gerar código java
-  >Atribuições realizadas corretamente
-  >Operações Aritméticas executadas corretamente
 */
 
 @header {

@@ -7,6 +7,11 @@ public class BooleanExpression extends AbstractExpression {
 
   @Override
   public String eval() {
-    return expr.replace("VERDADEIRO", "true").replace("FALSO", "false");
+    switch(language) {
+      case "py":
+        return expr.replace("VERDADEIRO", "True").replace("FALSO", "False");
+      default: /*js, java */
+        return expr.replace("VERDADEIRO", "true").replace("FALSO", "false");
+    }
   }
 }

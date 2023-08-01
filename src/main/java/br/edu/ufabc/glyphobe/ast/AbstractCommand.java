@@ -11,6 +11,7 @@ public abstract class AbstractCommand {
 
   public AbstractCommand(String lang) {
     setLanguage(lang);
+    System.out.println(language);
   }
 
   public String getLanguage() {
@@ -18,7 +19,6 @@ public abstract class AbstractCommand {
   }
 
   public void setLanguage(String lang) {
-    if (lang == "java") this.language = lang;
-    else this.language = "js";
+    this.language = lang;
   }
 }

@@ -24,6 +24,18 @@ public class CmdRead extends AbstractCommand {
         default:
           return "";
       }
-    else /*js*/ return id.getName() + " = " + "prompt(\"Type your input\");\n";
+    else if (language == "py") {
+      switch(id.getType()) {
+        case INTEGER:
+          return id.getName() + " = int(input(\"Type your " + id.getType() + " input: \"))\n";
+        case REAL:
+          return id.getName() + " = float(input(\"Type your " + id.getType() + " input: \"))\n";
+        case BOOLEAN:
+          return id.getName() + " = bool(input(\"Type your " + id.getType() + " input: \"))\n";
+        default:
+          return "";
+      }
+    }
+    else /*js*/ return id.getName() + " = prompt(\"Type your input\");\n";
   }
 }

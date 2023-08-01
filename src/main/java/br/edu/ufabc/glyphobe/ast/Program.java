@@ -21,6 +21,13 @@ public class Program {
     blockLevel = 0;
   }
 
+  public Program(String fileName) {
+    this.fileName = fileName;
+    this.cmds = new ArrayList<AbstractCommand>();
+    setLanguage("js");
+    blockLevel = 0;
+  }
+
   public String generateTarget() {
     try {
       FileWriter fw = new FileWriter(fileName + "." + language);
@@ -30,11 +37,13 @@ public class Program {
       strBuilder.append(generatePreCode());
 
       cmds.stream().forEach(c -> {
-        if (c.generateCode().contains("{")) blockLevel++;
-        else if (c.generateCode().contains("}")) blockLevel--;
-
-        String blockSpaces = indentBlock();
-        if (c.generateCode().contains("{")) blockSpaces = "";
+        String blockSpaces = "";
+        if (c instanceof CmdToken) {
+          if (((CmdToken)c).getToken().contains("{")) blockLevel++;
+          else if (((CmdToken)c).getToken().contains("}")) blockLevel--;
+        } else {
+          blockSpaces = indentBlock();
+        }
 
         strBuilder.append(blockSpaces + c.generateCode());
       });
@@ -99,9 +108,10 @@ public class Program {
     this.it = it;
   }
 
+  //Caso seja recebido uma linguagem não suportada, o programa será compilado para JavaScript
   public void setLanguage(String lang) {
-    if (lang == "java") this.language = lang;
-
+    if      (lang == "java") this.language = lang;
+    else if (lang == "py")   this.language = lang;
     else this.language = "js";
   }
 

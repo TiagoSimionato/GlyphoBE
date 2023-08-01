@@ -20,14 +20,29 @@ public class CmdIf extends AbstractCommand {
   }
 
   private String generateIf() {
-    return "if (" + expr + ") ";
+    switch (language) {
+      case "py":
+        return "if (" + expr + ")";
+      default: /*js, java */
+        return "if (" + expr + ") ";
+    }
   }
 
   private String generateElseIf() {
-    return "else if (" + expr + ") ";
+    switch(language) {
+      case "py":
+        return "elif (" + expr + ")";
+      default: /*js, java */
+        return "else if (" + expr + ") ";
+    }
   }
 
   private String generateElse() {
-    return "else ";
+    switch(language) {
+      case "py":
+        return "else";
+      default: /*js, java */
+        return "else ";
+    }
   }
 }

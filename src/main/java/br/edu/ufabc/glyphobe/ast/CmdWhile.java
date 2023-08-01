@@ -10,6 +10,11 @@ public class CmdWhile extends AbstractCommand{
 
   @Override
   public String generateCode() {
-    return "while (" + expr + ") ";
+    switch(language) {
+      case "py":
+        return "while (" + expr + ")";
+      default: /*js, java */
+        return "while (" + expr + ") ";
+    }
   }
 }

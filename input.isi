@@ -30,9 +30,11 @@ senao {
 
 enquanto (a <> 1) {
   a := a + 1.
-  se (b <= 0.3R) entao {
+  se (b == aa) entao {
     b := 3.0R  + 4.2R.
+    escreva("b igual aa!").
   }
+  leia(a).
 }
 
 fimprog.
