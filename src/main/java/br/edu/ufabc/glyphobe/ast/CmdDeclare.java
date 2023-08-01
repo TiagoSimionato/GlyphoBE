@@ -27,7 +27,7 @@ public class CmdDeclare extends AbstractCommand {
   private String generateInteger() {
     switch (language) {
       case "java":
-        return "";
+        return "int " + id.getName() + ";\n";
       default: 
         return "var " + id.getName() + ";\n";
     }
@@ -36,7 +36,7 @@ public class CmdDeclare extends AbstractCommand {
   private String generateReal() {
     switch (language) {
       case "java":
-        return "";
+        return "float " + id.getName() + ";\n";
       default: 
         return "var " + id.getName() + ";\n";
     }
@@ -45,7 +45,7 @@ public class CmdDeclare extends AbstractCommand {
   private String generateBoolean() {
     switch (language) {
       case "java":
-        return "";
+        return "boolean " + id.getName() + ";\n";
       default: 
         return "var " + id.getName() + ";\n";
     }

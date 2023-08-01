@@ -163,7 +163,6 @@ cmdRead : 'leia' OP ID {
     idName = _input.LT(-1).getText();
     isIdDeclared(idName, _input.LT(-1).getLine());
     idHaveValue(idName, _input.LT(-1).getLine());
-    declaredOnly.remove(idName);
   }
   CP
   {
@@ -216,7 +215,6 @@ cmdAttr : ID {
 cmdAttr2 : ATTR 
     {es.resetExpr();} expr {
     endExprEval(currentId.getType(), _ctx.getStart().getLine());
-    declaredOnly.remove(currentId.getName());
     if (currentId.getType() == DataType.INTEGER) {
       currentId.setValue(1);
     } else if (currentId.getType() == DataType.BOOLEAN) {

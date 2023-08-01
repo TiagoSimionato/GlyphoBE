@@ -112,7 +112,7 @@ public class Glypho {
       parser.removeErrorListeners();
       parser.addErrorListener(listener);
 
-      parser.setTargetLanguage("js");
+      parser.setTargetLanguage("java");
       
       //Expression Analysis
       parser.program();

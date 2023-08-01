@@ -14,11 +14,7 @@ public class CmdAttr extends AbstractCommand {
 
   @Override
   public String generateCode() {
-    if (language == "java") {
-      return ""; //TODO
-    } else { //js
-      return id.getName() + " = " + expr + ";\n";
-    }
+    return id.getName() + " = " + expr + ";\n";
   }
 
   public AbstractIdentifier getId() {

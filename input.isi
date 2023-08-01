@@ -1,11 +1,15 @@
 programa
-declare REAL aa := 3R, b, maisum.
+declare REAL aa := 3R, b, maisum := 3R.
+aa := aa.
 declare INTEIRO a := 3.
 escreva(a + a - a).
 
 b := 1R.
+leia(b).
+b := maisum.
 maisum := b.
 declare BOOLEANO c := FALSO.
+leia(c).
 a := 2.
 leia(a).
 escreva(a).

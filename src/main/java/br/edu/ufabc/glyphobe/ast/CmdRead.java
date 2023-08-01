@@ -13,7 +13,17 @@ public class CmdRead extends AbstractCommand {
 
   @Override
   public String generateCode() {
-    if (language == "java") return ""; /*TODO*/
+    if (language == "java")
+      switch(id.getType()) {
+        case INTEGER:
+          return id.getName() + " = scanner.nextInt();\n";
+        case REAL:
+          return id.getName() + " = scanner.nextFloat();\n";
+        case BOOLEAN:
+          return id.getName() + " = scanner.nextBoolean();\n";
+        default:
+          return "";
+      }
     else /*js*/ return id.getName() + " = " + "prompt(\"Type your input\");\n";
   }
 }

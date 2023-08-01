@@ -7,7 +7,7 @@ public class RealExpression extends AbstractExpression {
 
   @Override
   public String eval() {
-    if (language == "java") return expr.replace("R", "F");
+    if (language == "java") return expr.replace("R", "f");
     else /*js*/ return expr.replace("R", "");
   }
 }

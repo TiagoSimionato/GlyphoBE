@@ -63,9 +63,11 @@ public class Program {
   private String generatePreCode() {
     switch(language) {
       case "java":
-        blockLevel++;
-        return "public class Main { \n"+
-          "  public static void main(String[] args) {\n";
+        blockLevel = 2;
+        return "import java.util.Scanner;\n\n"
+          + "public class " + fileName + " { \n"
+          + "  public static void main(String[] args) {\n"
+          + "    Scanner scanner = new Scanner(System.in);\n";
       default:
         return "";
     }
@@ -74,7 +76,8 @@ public class Program {
   private String generatePostCode() {
     switch(language) {
       case "java":
-        return "  }\n}\n";
+        return "    scanner.close();\n"
+          + "  }\n}\n";
       default:
         return "";
     }
