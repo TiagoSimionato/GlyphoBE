@@ -11,7 +11,6 @@ public abstract class AbstractCommand {
 
   public AbstractCommand(String lang) {
     setLanguage(lang);
-    System.out.println(language);
   }
 
   public String getLanguage() {

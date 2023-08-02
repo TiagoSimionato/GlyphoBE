@@ -37,9 +37,11 @@ public class output {
 }
     while (a != 1) {
       a = a + 1;
-      if (b <= 0.3f) {
+      if (b == aa) {
         b = 3.0f + 4.2f;
+        System.out.println("b igual aa!");
 }
+      a = scanner.nextInt();
 }
     scanner.close();
   }

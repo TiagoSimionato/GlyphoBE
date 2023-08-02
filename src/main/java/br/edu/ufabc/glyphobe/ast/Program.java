@@ -29,36 +29,25 @@ public class Program {
   }
 
   public String generateTarget() {
-    try {
-      FileWriter fw = new FileWriter(fileName + "." + language);
-      PrintWriter pw = new PrintWriter(fw);
-      StringBuilder strBuilder = new StringBuilder();
+    StringBuilder strBuilder = new StringBuilder();
 
-      strBuilder.append(generatePreCode());
+    strBuilder.append(generatePreCode());
 
-      cmds.stream().forEach(c -> {
-        String blockSpaces = "";
-        if (c instanceof CmdToken) {
-          if (((CmdToken)c).getToken().contains("{")) blockLevel++;
-          else if (((CmdToken)c).getToken().contains("}")) blockLevel--;
-        } else {
-          blockSpaces = indentBlock();
-        }
+    cmds.stream().forEach(c -> {
+      String blockSpaces = "";
+      if (c instanceof CmdToken) {
+        if (((CmdToken)c).getToken().contains("{")) blockLevel++;
+        else if (((CmdToken)c).getToken().contains("}")) blockLevel--;
+      } else {
+        blockSpaces = indentBlock();
+      }
 
-        strBuilder.append(blockSpaces + c.generateCode());
-      });
+      strBuilder.append(blockSpaces + c.generateCode());
+    });
 
-      strBuilder.append(generatePostCode());
+    strBuilder.append(generatePostCode());
 
-      pw.println(strBuilder.toString());
-      pw.close();
-      fw.close();
-
-      return strBuilder.toString();
-    } catch (Exception e) {
-      e.printStackTrace();
-      return "ERROR: " + e.getMessage();
-    }
+    return strBuilder.toString();
   }
 
   private String indentBlock() {
@@ -110,8 +99,8 @@ public class Program {
 
   //Caso seja recebido uma linguagem não suportada, o programa será compilado para JavaScript
   public void setLanguage(String lang) {
-    if      (lang == "java") this.language = lang;
-    else if (lang == "py")   this.language = lang;
+    if      (lang.compareTo("java") == 0) this.language = lang;
+    else if (lang.compareTo("py") == 0)   this.language = lang;
     else this.language = "js";
   }
 

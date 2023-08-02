@@ -32,8 +32,10 @@ else {
 }
 while (a !== 1) {
   a = a + 1;
-  if (b <= 0.3) {
+  if (b === aa) {
     b = 3.0 + 4.2;
+    alert("b igual aa!");
 }
+  a = prompt("Type your input");
 }
 

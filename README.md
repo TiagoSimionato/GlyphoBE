@@ -16,10 +16,11 @@
 - Editor Highlight (simulando uma pequena IDE)
   - Fetch do back end perguntando por palavras chave?
 - Operadores relacionais?
-- Implementar erro semântico como subclasse de RecognitionError para tratar melhor error semânticos
-- Revisar resposta da API REST
+- Bug de indentação no front
 - Comentar o Código
 - Gravar o vídeo do projeto
+- Implementar erro semântico como subclasse de RecognitionError para tratar melhor error semânticos
+- Revisar resposta da API REST
 
 ## Erros semânticos implementados
 

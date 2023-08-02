@@ -173,6 +173,10 @@ public class isilangLexer extends Lexer {
 	    program.setLanguage(lang);
 	  }
 
+	  public String getTargetLanguage() {
+	    return program.getLanguage();
+	  }
+
 	  public String generateObjectCode() {
 	    return program.generateTarget();
 	  }

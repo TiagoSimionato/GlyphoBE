@@ -13,7 +13,7 @@ public class CmdRead extends AbstractCommand {
 
   @Override
   public String generateCode() {
-    if (language == "java")
+    if (language.compareTo("java") == 0)
       switch(id.getType()) {
         case INTEGER:
           return id.getName() + " = scanner.nextInt();\n";
@@ -24,7 +24,7 @@ public class CmdRead extends AbstractCommand {
         default:
           return "";
       }
-    else if (language == "py") {
+    else if (language.compareTo("py") == 0) {
       switch(id.getType()) {
         case INTEGER:
           return id.getName() + " = int(input(\"Type your " + id.getType() + " input: \"))\n";

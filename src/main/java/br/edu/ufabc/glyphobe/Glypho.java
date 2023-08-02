@@ -1,6 +1,8 @@
 package br.edu.ufabc.glyphobe;
 
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -8,8 +10,8 @@ import org.antlr.v4.runtime.misc.ParseCancellationException;
 
 import br.edu.ufabc.glyphobe.core.isilangLexer;
 import br.edu.ufabc.glyphobe.core.isilangParser;
-import br.edu.ufabc.glyphobe.exceptions.SyntaxErrorListener;
 import br.edu.ufabc.glyphobe.exceptions.SemanticError;
+import br.edu.ufabc.glyphobe.exceptions.SyntaxErrorListener;
 
 /**
  * Arquivos fonte: .isi
@@ -28,16 +30,15 @@ public class Glypho {
 
   public Glypho(String language) {
     this.targetCode = "";
-    this.targetLanguage = "js";
+    this.targetLanguage = language;
   }
 
   public Glypho(String language, String code) {
     this.targetCode = "";
     this.targetLanguage = language;
-    compile(code);
   }
   
-  public String compile(String code) {
+  public String compile(String code, String language) {
     try {
       //Uso meu próprio error listener para manter track de todos os problemas e reportar no final
       SyntaxErrorListener listener = new SyntaxErrorListener();
@@ -54,7 +55,7 @@ public class Glypho {
       parser.removeErrorListeners();
       parser.addErrorListener(listener);
 
-      parser.setTargetLanguage(targetLanguage);
+      parser.setTargetLanguage(language);
 
       //Expression Analysis
       parser.program();
@@ -64,14 +65,17 @@ public class Glypho {
         compilationResult = "Compilation Successful\n";
         return compilationResult;
       }
+      System.out.println("Requisition compiled with syntax errors");
       compilationResult = "Compilation Failed\n" + listener.toString();
       return compilationResult;
     }
     catch (SemanticError e) {
+      System.out.println("Requisition compiled with semantic errors");
       compilationResult = "Compilation Failed\n" + e.getMessage();
       return compilationResult;
     }
     catch(Exception e) {
+      System.out.println("Requisition compiled with error");
       e.printStackTrace();
       compilationResult = "UNKNOWN ERROR: " + e.getMessage();
       return compilationResult;
@@ -86,17 +90,37 @@ public class Glypho {
     return compilationResult;
   }
 
+  public String getTargetLanguage() {
+    return targetLanguage;
+  }
+
   public static void main(String[] args) {
     try {
-      System.out.println(compile(CharStreams.fromFileName("input.isi").toString(), ""));
+      System.out.println(compile(CharStreams.fromFileName("input.isi").toString()));
     } catch (IOException e) {
       System.out.println("No such file in directory");
     }
   }
 
-  //TODO: delete
-  public static String compile(String code, String a) {
+  private static void generateOutputFile(String fileName, String language, String targetCode) {
     try {
+      FileWriter fw = new FileWriter(fileName + "." + language);
+      PrintWriter pw = new PrintWriter(fw);
+
+      pw.println(targetCode);
+      
+      pw.close();
+      fw.close();
+    } catch (Exception e) {
+      e.printStackTrace();
+      System.out.println("ERROR: " + e.getMessage());;
+    }
+  }
+
+  //Usado apenas quando rodar a main do Glypho, para propositos de teste do compilador
+  public static String compile(String code) {
+    try {
+      String lang = "java";
       //Uso meu próprio error listener para manter track de todos os problemas e reportar no final
       SyntaxErrorListener listener = new SyntaxErrorListener();
 
@@ -112,13 +136,13 @@ public class Glypho {
       parser.removeErrorListeners();
       parser.addErrorListener(listener);
 
-      parser.setTargetLanguage("py");
+      parser.setTargetLanguage(lang);
       
       //Expression Analysis
       parser.program();
 
       if (listener.getSyntaxErrors().size() <= 0) {
-        parser.generateObjectCode();
+        generateOutputFile("output", lang, parser.generateObjectCode());
         return "Compilation Successful\n";
       }
       return "Compilation Failed\n" + listener.toString();

@@ -23,8 +23,6 @@ else:
   print(b)
 while (a != 1):
   a = a + 1
-  if (b == aa):
+  if (b <= 0.3):
     b = 3.0 + 4.2
-    print("b igual aa!")
-  a = int(input("Type your INTEGER input: "))
 

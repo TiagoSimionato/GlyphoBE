@@ -11,8 +11,13 @@ public class CmdWrite extends AbstractCommand {
 
   @Override
   public String generateCode() {
-    if      (language == "java") return "System.out.println(" + text + ");\n";
-    else if (language == "py")   return "print(" + text + ")\n";
-    else /*js*/                  return "alert(" + text + ");\n";
+    switch(language) {
+      case "java":
+        return "System.out.println(" + text + ");\n";
+      case "py":
+        return "print(" + text + ")\n";
+      default: /*js*/
+        return "alert(" + text + ");\n";
+    }
   }
 }
