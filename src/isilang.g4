@@ -1,12 +1,5 @@
 grammar isilang;
 
-/**
-TODO:
->Análise Semântica:
-  >verificar se resultado da expressão é compativel com o tipo do identificador. ex atribuir 1 / 2 em inteiro
-  >incluir tipo string?
-*/
-
 @header {
   import br.edu.ufabc.glyphobe.ast.Program;
   import br.edu.ufabc.glyphobe.ast.AbstractCommand;

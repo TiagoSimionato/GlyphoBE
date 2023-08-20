@@ -31,6 +31,7 @@ public class output {
 }
     else if (true) {
       System.out.println("duvido");
+      System.out.println("duvido muito muito mesmo");
 }
     else {
       System.out.println(b);

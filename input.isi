@@ -23,6 +23,7 @@ ou se (c) entao {
 }
 ou se (VERDADEIRO) entao {
   escreva("duvido").
+  escreva("duvido muito muito mesmo").
 }
 senao {
   escreva(b).
