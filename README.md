@@ -1,5 +1,5 @@
 # GlyphoBE
- Repo containing the Back-End of the Glypho Compiler
+ Repo containing the Back-End of the Glypho Compiler.
 
  The project was made using [ANTL](https://www.antlr.org/) to generate the compiler classes and [SPRING](https://spring.io/) to setup the project server 
 
