@@ -11,6 +11,9 @@
 
 `.\mvnw spring-boot:run`
 
+## Generating JAR
+
+`.\mvnw package`
 
 ## Erros semânticos implementados
 

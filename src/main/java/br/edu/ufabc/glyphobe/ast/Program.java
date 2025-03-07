@@ -1,7 +1,5 @@
 package br.edu.ufabc.glyphobe.ast;
 
-import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
