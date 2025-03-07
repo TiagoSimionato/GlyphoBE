@@ -10,10 +10,5 @@ public class glyphobeApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(glyphobeApplication.class, args);
-		try {
-			System.out.println(InetAddress.getLocalHost().getHostAddress());
-		} catch (Exception e) {
-			e.getStackTrace();
-		}
 	}
 }
